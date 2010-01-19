@@ -21,7 +21,7 @@
  * For single test run.
  */
 if ( ! defined( 'PHPUnit_MAIN_METHOD' ) ) {
-	define( 'PHPUnit_MAIN_METHOD', 'Zend_ImageTest::main' );
+    define( 'PHPUnit_MAIN_METHOD', 'Zend_ImageTest::main' );
 }
 
 /**
@@ -35,34 +35,34 @@ require_once dirname( __FILE__ ) . '/../TestHelper.php';
 require_once 'Zend/Image.php';
 
 /**
- * @category 	Zend
- * @package 	Zend_Image
- * @subpackage	UnitTests
- * @author 		Seletskiy Stanislav <s.seletskiy@office.ngs.ru>
- * @author 		Leonid Shagabutdinov <leonid@shagabutdinov.com>
- * @copyright 	2010 NGS
+ * @category    Zend
+ * @package     Zend_Image
+ * @subpackage  UnitTests
+ * @author      Seletskiy Stanislav <s.seletskiy@office.ngs.ru>
+ * @author      Leonid Shagabutdinov <leonid@shagabutdinov.com>
+ * @copyright   2010 NGS
  */
 class Zend_ImageTest extends PHPUnit_Framework_Testcase
 {
-	public static function main()
-	{
-		$suite = new PHPUnit_Framework_TestSuite( __CLASS__ );
-		$result = PHPUnit_TextUI_TestRunner::run( $suite );
-	}
+    public static function main()
+    {
+        $suite = new PHPUnit_Framework_TestSuite( __CLASS__ );
+        $result = PHPUnit_TextUI_TestRunner::run( $suite );
+    }
 
-	public function setUp() {}
-	public function tearDown() {}
+    public function setUp() {}
+    public function tearDown() {}
 
-	public function testLoad()
-	{
-		$driverMock = $this->getMock( 'Zend_Image_Driver_Interface' );
-		$driverMock->expects( $this->once() )->method( 'load' )
-			->with( '1.jpg' );
+    public function testLoad()
+    {
+        $driverMock = $this->getMock( 'Zend_Image_Driver_Interface' );
+        $driverMock->expects( $this->once() )->method( 'load' )
+            ->with( '1.jpg' );
 
-		$i = new Zend_Image( '1.jpg', $driverMock );
-	}
+        $i = new Zend_Image( '1.jpg', $driverMock );
+    }
 }
 
 if ( PHPUnit_MAIN_METHOD == 'Zend_ImageTest::main' ) {
-	Zend_ImageTest::main();
+    Zend_ImageTest::main();
 }

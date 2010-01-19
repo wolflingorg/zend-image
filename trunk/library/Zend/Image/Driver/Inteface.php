@@ -28,5 +28,5 @@ interface Zend_Image_Driver_Interface
     /**
      * @todo Description
      */
-	public function load();
+    public function load();
 }
