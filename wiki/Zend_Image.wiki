@@ -7,6 +7,9 @@ require_once 'Zend/Image.php';
 
 = Methods =
 == Creating object ==
+`__`construct( $image, $driver );
+ # $image :: null | string | Zend_Image;
+ # $driver :: Zend_Image_Driver;
 === New empty image ===
 {{{
 $image = Zend_Image( null, $driver );
@@ -31,13 +34,14 @@ $image = new Zend_Image( $binaryImage, $driver );
 where {{{$image2}}} implements Zend_Image interface, and {{{$driver}}} implements Zend_Image_Driver.
 
 == Getting some info ==
-=== Get metrics ===
+=== Get width ===
+getWidth() :: int;
 {{{
 $width = $image->getWidth();
-$height = $image->getHeight();
 }}}
 
-=== Get EXIF ===
+=== Get height ===
+getHeight() :: int;
 {{{
-$exif = $image->getExif();
+$height = $image->getHeight();
 }}}
