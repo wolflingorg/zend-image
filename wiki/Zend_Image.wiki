@@ -9,7 +9,7 @@ require_once 'Zend/Image.php';
 == Creating object ==
 `__`construct( $input, $driver );
  # $input :: null | string | Zend_Image;
- # $driver :: Zend_Image_Driver;
+ # $driver :: Zend_Image_Driver.
 === New empty image ===
 {{{
 $image = Zend_Image( null, $driver );
@@ -44,4 +44,11 @@ $width = $image->getWidth();
 getHeight() :: int;
 {{{
 $height = $image->getHeight();
+}}}
+
+== Saving ==
+save( $filename ) :: bool;
+ # $filename :: string.
+{{{
+$image->save( $filename );
 }}}
