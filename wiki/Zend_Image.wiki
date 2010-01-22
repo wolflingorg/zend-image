@@ -1,0 +1,25 @@
+#summary Zend_Image provides basic functionality.
+
+= Preparing for use =
+{{{
+require_once 'Zend/Image.php';
+}}}
+
+= Methods =
+== Creating object ==
+=== New empty image ===
+{{{
+$image = Zend_Image( null, $driver );
+}}}
+
+=== Loading existing image by filename ===
+{{{
+$image = new Zend_Image( $filename, $driver );
+}}}
+
+=== Passing existing image object ===
+{{{
+$image = new Zend_Image( $image2, $driver );
+}}}
+
+where $image2 implements Zend_Image interface, and $driver implements Zend_Image_Driver.
