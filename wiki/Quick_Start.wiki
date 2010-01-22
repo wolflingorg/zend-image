@@ -36,7 +36,7 @@ $overlayed->overlay( new Zend_Image( 'border.png' ) );
 }}}
 
 == Extended usage ==
-You also can apply more than one filter due {{{apply()}}} function command:
+You also can apply more than one filter due {{{apply()}}} function:
 {{{
 $image = new Zend_Image( 'ashes_and_snow.jpg', new Zend_Image_Driver_Imagick );
 $image
