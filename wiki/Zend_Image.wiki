@@ -22,7 +22,7 @@ $image = new Zend_Image( $filename, $driver );
 $image = new Zend_Image( $image2, $driver );
 }}}
 
-=== By binary contents [?] ===
+=== By binary contents (?) ===
 {{{
 $image = new Zend_Image( $binaryImage, $driver );
 }}}
