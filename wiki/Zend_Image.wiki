@@ -1,6 +1,6 @@
 #summary Zend_Image provides basic functionality.
 
-A :: B means, that object A has type B.
+,,A :: B means, that object A has type B.,,
 
 = Preparing for use =
 {{{
