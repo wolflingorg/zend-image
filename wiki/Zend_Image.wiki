@@ -49,6 +49,7 @@ $height = $image->getHeight();
 == Saving ==
 save( $filename ) :: bool;
  # $filename :: string.
+
 {{{
 $image->save( $filename );
 }}}
