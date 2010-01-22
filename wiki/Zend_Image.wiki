@@ -1,5 +1,7 @@
 #summary Zend_Image provides basic functionality.
 
+A :: B means, that object A has type B.
+
 = Preparing for use =
 {{{
 require_once 'Zend/Image.php';
