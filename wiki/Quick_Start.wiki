@@ -41,7 +41,7 @@ You also can apply more than once filter at one command:
 $image = new Zend_Image( 'ashes_and_snow.jpg', new Zend_Image_Driver_Imagick );
 $image
     ->apply( new Zend_Image_Transform )->center()->crop( 0, -50 )
-    ->apply( new Zend_Image_Color )->grayscale();
+    ->apply( new Zend_Image_Color )->grayscale()
     ->apply( new Zend_Image_Text )
         ->bottom( 50 )->center()
         ->font( 'Arial' )->color( '#fff' )->background( '#000' )
