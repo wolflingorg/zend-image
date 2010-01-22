@@ -28,4 +28,16 @@ $image = new Zend_Image( $binaryImage, $driver );
 }}}
 
 
-where: {{{$image2}}} implements Zend_Image interface, and {{{$driver}}} implements Zend_Image_Driver.
+where {{{$image2}}} implements Zend_Image interface, and {{{$driver}}} implements Zend_Image_Driver.
+
+== Getting some info ==
+=== Get metrics ===
+{{{
+$width = $image->getWidth();
+$height = $image->getHeight();
+}}}
+
+=== Get EXIF ===
+{{{
+$exif = $image->getExif();
+}}}
