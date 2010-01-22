@@ -1,0 +1,18 @@
+#summary How to work with Zend_Image and simple image transformations.
+#labels Phase-Implementation,using
+
+= Download =
+You can download latest release of Zend_Image from [http://example.com urlhere].
+
+= Installation =
+Zend_Image doesn't use any of Zend Framework classes, so you can simply copy source
+files into your project and start using it.
+
+= Using =
+== Basic operations ==
+Simplest operation, that you can do with your image is a loading and getting
+some image info, such as size. You can do it with this code:
+{{{
+$image = Zend_Image( 'fullmoon.jpg', new Zend_Image_Driver_Imagick );
+echo 'Size: ' . $image->getWidth() . '×' . $image->getHeight();
+}}}
