@@ -48,7 +48,7 @@ $image
         ->text( 'Fly the bird path' );
 }}}
 
-Or may be you want some charts:
+== Want some charts? ==
 {{{
 $image = new Zend_Image_Draw;
 $image
