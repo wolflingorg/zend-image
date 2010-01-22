@@ -7,8 +7,8 @@ require_once 'Zend/Image.php';
 
 = Methods =
 == Creating object ==
-`__`construct( $image, $driver );
- # $image :: null | string | Zend_Image;
+`__`construct( $input, $driver );
+ # $input :: null | string | Zend_Image;
  # $driver :: Zend_Image_Driver;
 === New empty image ===
 {{{
