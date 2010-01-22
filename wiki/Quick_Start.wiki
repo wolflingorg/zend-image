@@ -1,5 +1,5 @@
 #summary How to work with Zend_Image and simple image transformations.
-#labels Phase-Implementation,using
+#labels Phase-Implementation,using,basics,examples,beggining
 
 = Download =
 You can download latest release of Zend_Image from [http://example.com urlhere].
