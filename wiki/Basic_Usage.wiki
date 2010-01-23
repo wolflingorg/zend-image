@@ -13,6 +13,7 @@ New copy of `Zend_Image_Driver` passed in second argument of constructor.
 `Zend_Image::__construct( null, $driver );`
 
 Creates a new empty image.
+
 Example:
 {{{
 $image = new Zend_Image( null, new Zend_Image_Driver_Imagick );
