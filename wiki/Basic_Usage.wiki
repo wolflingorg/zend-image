@@ -3,7 +3,7 @@
 
 `Zend_Image` provides basic functionality, that allows you loading, saving and extracting some info, such as width and height.
 
-First of all, you have to choose image driver to work with. Now there are two drivers:
+First of all, you have to choose image driver to work with. There are two drivers now:
  # `Zend_Image_Driver_Imagick` and
  # `Zend_Image_Driver_Gd2`.
 
