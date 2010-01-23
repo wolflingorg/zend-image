@@ -9,6 +9,15 @@ First of all, you must choose image driver to work with. Now there are two drive
 
 New copy of `Zend_Image_Driver` passed in second argument of constructor.
 
+== Creating new image ==
+`Zend_Image::__construct( null, $driver );`
+
+Creates a new empty image.
+Example:
+{{{
+$image = new Zend_Image( null, new Zend_Image_Driver_Imagick );
+}}}
+
 == Loading image ==
 `Zend_Image::__construct( $source, $driver );`
 
@@ -27,6 +36,7 @@ Example:
 {{{
 $image->save( 'heaven.jpg' );
 }}}
+
 
 == Retrieving binary image contents ==
 `Zend_Image::getImage();`
