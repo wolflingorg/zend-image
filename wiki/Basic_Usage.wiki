@@ -3,7 +3,7 @@
 
 `Zend_Image` provides basic functionality, that allows you loading, saving and extracting some info, such as width and height.
 
-First of all, you must choose image driver to work with. Now there are two drivers:
+First of all, you have to choose image driver to work with. Now there are two drivers:
  # `Zend_Image_Driver_Imagick` and
  # `Zend_Image_Driver_Gd2`.
 
@@ -22,7 +22,7 @@ $image = new Zend_Image( null, new Zend_Image_Driver_Imagick );
 == Loading image ==
 `Zend_Image::__construct( $source, $driver );`
 
-If you want load image from filename, you must specify `$source` as existing filename.
+If you want load image from filename, you have to specify `$source` as existing filename.
 Example:
 {{{
 $stars = new Zend_Image( 'start.jpg', new Zend_Image_Driver_Imagick );
