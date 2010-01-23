@@ -8,16 +8,16 @@
  * This source file is subject to the new BSD license that is bundled
  * with this package in the file LICENSE.txt.
  *
- * @category   Zend
- * @package    Zend_Image
- * @author     Stanislav Seletskiy <s.seletskiy@gmail.com>
- * @author     Leonid Shagabutdinov <leonid@shagabutdinov.com>
- * @copyright  Copyright (c) 2010
- * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
- * @version    $Id: $
+ * @category  Zend
+ * @package   Zend_Image
+ * @author    Stanislav Seletskiy <s.seletskiy@gmail.com>
+ * @author    Leonid Shagabutdinov <leonid@shagabutdinov.com>
+ * @copyright Copyright (c) 2010
+ * @license   http://www.opensource.org/licenses/bsd-license.php New BSD License
+ * @version   $Id$
  */
 
-date_default_timezone_set('Asia/Novosibirsk');
+date_default_timezone_set( 'Asia/Novosibirsk' );
 error_reporting( E_ALL | E_STRICT );
 
 define( 'ROOT_PATH', dirname( dirname( __FILE__ ) ) . DIRECTORY_SEPARATOR );
@@ -25,11 +25,11 @@ define( 'LIBRARY_PATH', ROOT_PATH . 'library' . DIRECTORY_SEPARATOR );
 define( 'TESTS_PATH', ROOT_PATH . 'tests' . DIRECTORY_SEPARATOR );
 
 set_include_path(
-    implode(
-        PATH_SEPARATOR, array(
-            LIBRARY_PATH, TESTS_PATH , get_include_path()
-        )
-    )
+	implode(
+		PATH_SEPARATOR, array(
+			LIBRARY_PATH, TESTS_PATH , get_include_path()
+		)
+	)
 );
 
 /*
@@ -43,4 +43,4 @@ require_once 'PHPUnit/Runner/Version.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 require_once 'PHPUnit/Util/Filter.php';
 
-PHPUnit_Util_Filter::addDirectoryToWhitelist(LIBRARY_PATH);
+PHPUnit_Util_Filter::addDirectoryToWhitelist( LIBRARY_PATH );
