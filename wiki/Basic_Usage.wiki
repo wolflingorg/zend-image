@@ -10,7 +10,7 @@ First of all, you must choose image driver to work with. Now there are two drive
 New copy of `Zend_Image_Driver` passed in second argument of constructor.
 
 == Loading image ==
-Zend_Image::__construct( $source, $driver )
+Zend_Image::`__`construct( $source, $driver )
 
 If you want load image from filename, you must specify `$source` as existing filename.
 Example:
