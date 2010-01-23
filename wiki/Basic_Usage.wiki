@@ -20,6 +20,7 @@ $stars = new Zend_Image( 'start.jpg', new Zend_Image_Driver_Imagick );
 
 == Saving image ==
 Zend_Image::save( $filename );
+
 Saving current version of image to the `$filename`.
 
 Example:
@@ -29,6 +30,7 @@ $image->save( 'heaven.jpg' );
 
 == Retrieving binary image contents ==
 Zend_Image::getImage();
+
 Method returns binary content of image.
 
 Example:
@@ -38,9 +40,11 @@ $binary = $image->getImage();
 
 == Metrics ==
 Zend_Image::getWidth();
+
 Retrieving width of image.
 
 Zend_Image::getHeight();
+
 Retrieving height of image.
 
 Example:
