@@ -1,5 +1,5 @@
 #summary Loading, saving and getting image info.
-#labels Phase-Implementation,load,save,width,height,binary
+#labels Phase-Implementation,load,save,width,height,binary,basics
 
 Zend_Image provides basic functionality, that allows you loading, saving and extracting some info, such as width and height.
 
