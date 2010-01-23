@@ -52,9 +52,9 @@ $image
 {{{
 $image = new Zend_Image_Draw;
 $image
-    ->left( 20 )->bottom( 50 )->color( '#ebacca' )->border( '#000' )->rect( 20, 100 )
-    ->left( 60 )->bottom( 50 )->color( '#006600' )->border( '#000' )->rect( 20, 50 )
-    ->left( 100 )->bottom( 50 )->color( '#660000' )->border( '#000' )->rect( 20, 75 );
+    ->left( 20 )->bottom( 50 )->color( '#ebacca' )->border( '#000' )->rect( 20, -100 )
+    ->left( 60 )->bottom( 50 )->color( '#006600' )->border( '#000' )->rect( 20, -50 )
+    ->left( 100 )->bottom( 50 )->color( '#660000' )->border( '#000' )->rect( 20, -75 );
     ->left( 0 )->bottom( 50 )->color( 'black' )->horizontal()
     ->apply( new Zend_Image_Text )
         ->left( 20 )->bottom( 10 )->text( '2008' )
@@ -67,7 +67,7 @@ $image = new Zend_Image_Draw;
 $image
     ->center()->middle()
         ->color( 'brown' )->circle()
-        ->color( 'linen' )->pie( 0, 30, 360 - 15 )
+        ->color( 'linen' )->pie( -30, 30 )
     ->apply( new Zend_Image_Text )
         ->center()->bottom( 10 )->text( 'Diagrams alike pacman' );
 }}}
