@@ -1,0 +1,50 @@
+#summary Loading, saving and getting image info.
+#labels Phase-Implementation,load,save,width,height,binary
+
+Zend_Image provides basic functionality, that allows you loading, saving and extracting some info, such as width and height.
+
+First of all, you must choose image driver to work with. Now there are two drivers:
+ # `Zend_Image_Driver_Imagick` and
+ # `Zend_Image_Driver_Gd2`.
+
+New copy of `Zend_Image_Driver` passed in second argument of constructor.
+
+== Loading image ==
+Zend_Image::__construct( $source, $driver );
+
+If you want load image from filename, you must specify `$source` as existing filename.
+Example:
+{{{
+$stars = new Zend_Image( 'start.jpg', new Zend_Image_Driver_Imagick );
+}}}
+
+== Saving image ==
+Zend_Image::save( $filename );
+Saving current version of image to the `$filename`.
+
+Example:
+{{{
+$image->save( 'heaven.jpg' );
+}}}
+
+== Retrieving binary image contents ==
+Zend_Image::getImage();
+Method returns binary content of image.
+
+Example:
+{{{
+$binary = $image->getImage();
+}}}
+
+== Metrics ==
+Zend_Image::getWidth();
+Retrieving width of image.
+
+Zend_Image::getHeight();
+Retrieving height of image.
+
+Example:
+{{{
+$width = $image->getWidth();
+$height = $image->getHeight();
+}}}
