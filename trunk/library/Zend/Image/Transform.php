@@ -221,21 +221,8 @@ class Zend_Image_Transform extends Zend_Image
      */
     public function crop( $width, $height )
     {
-        if ( $this->_leftOffset > 0 ) {
-            $leftOffset = $this->_leftOffset;
-        } else if ( $this->_rightOffset > 0 ) {
-            $leftOffset = $this->getWidth() - $this->_rightOffset;
-        } else {
-            $leftOffset = 0;
-        }
-
-        if ( $this->_topOffset > 0 ) {
-            $topOffset = $this->_topOffset;
-        } else if ( $this->_bottomOffset > 0 ) {
-            $topOffset = $this->getHeight() - $this->_bottomOffset;
-        } else {
-            $topOffset = 0;
-        }
+        $leftOffset = $this->_calcLeftOffset();
+        $topOffset = $this->_calcTopOffset();
 
         if ( $this->_center ) {
             $leftOffset = round( ( $this->getWidth() - $width ) / 2 );
@@ -245,9 +232,74 @@ class Zend_Image_Transform extends Zend_Image
             $topOffset = round( ( $this->getHeight() - $height ) / 2 );
         }
 
+        if ( $height < 0 ) {
+            $topOffset += $height;
+            $height = -$height;
+        }
+
+        if ( $width < 0 ) {
+            $leftOffset += $width;
+            $width = -$width;
+        }
+
+        if ( $leftOffset < 0 ) {
+            throw new Zend_Image_Transform_Exception(
+                "Trying to crop from ($leftOffset, $topOffset). Offset can't been negative."
+            );
+        }
+
+        if ( $topOffset < 0 ) {
+            throw new Zend_Image_Transform_Exception(
+                "Trying to crop from ($leftOffset, $topOffset). Offset can't been negative."
+            );
+        }
+
+        if ( $topOffset + $height > $this->getHeight() ) {
+            throw new Zend_Image_Transform_Exception(
+                'Trying to crop to (' . ( $leftOffset + $width ) . ', ' .
+                    ( $topOffset + $height ) . '). Out of bottom bound.'
+            );
+        }
+
+        if ( $leftOffset + $width > $this->getWidth() ) {
+            throw new Zend_Image_Transform_Exception(
+                'Trying to crop to (' . ( $leftOffset + $width ) . ', ' .
+                    ( $topOffset + $height ) . '). Out of right bound.'
+            );
+        }
+
+
         $this->_driver->crop( $leftOffset, $topOffset, $width, $height );
 
         return $this;
+    }
+
+
+    private function _calcLeftOffset()
+    {
+        if ( $this->_leftOffset > 0 ) {
+            $leftOffset = $this->_leftOffset;
+        } else if ( $this->_rightOffset > 0 ) {
+            $leftOffset = $this->getWidth() - $this->_rightOffset;
+        } else {
+            $leftOffset = 0;
+        }
+
+        return $leftOffset;
+    }
+
+
+    private function _calcTopOffset()
+    {
+        if ( $this->_topOffset > 0 ) {
+            $topOffset = $this->_topOffset;
+        } else if ( $this->_bottomOffset > 0 ) {
+            $topOffset = $this->getHeight() - $this->_bottomOffset;
+        } else {
+            $topOffset = 0;
+        }
+
+        return $topOffset;
     }
 
 

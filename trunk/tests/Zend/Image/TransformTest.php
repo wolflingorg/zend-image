@@ -58,12 +58,14 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
     }
 
 
-    public function setUp() {
+    public function setUp() 
+    {
         $this->_driverMock = $this->getMock( 'Zend_Image_Driver_Interface' );
     }
 
 
-    public function tearDown() {
+    public function tearDown() 
+    {
         unset( $this->_driverMock );
     }
 
@@ -94,7 +96,7 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
 
     public function testCanFitIntoFrame()
     {
-        $this->_driverMock->expects( $this->exactly( 2 ) )->method( 'getSize' )
+        $this->_driverMock->expects( $this->any( 2 ) )->method( 'getSize' )
             ->will( $this->returnValue( array( 1000, 500 ) ) );
         $this->_driverMock->expects( $this->once() )->method( 'resize' )
             ->with( 50, 25 );
@@ -106,7 +108,7 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
 
     public function testCanFitOutOfFrame()
     {
-        $this->_driverMock->expects( $this->exactly( 2 ) )->method( 'getSize' )
+        $this->_driverMock->expects( $this->any( 2 ) )->method( 'getSize' )
             ->will( $this->returnValue( array( 1000, 500 ) ) );
         $this->_driverMock->expects( $this->once() )->method( 'resize' )
             ->with( 100, 50 );
@@ -118,7 +120,7 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
 
     public function testCanCropLeftTop()
     {
-        $this->_driverMock->expects( $this->never() )->method( 'getSize' )
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
             ->will( $this->returnValue( array( 1000, 500 ) ) );
         $this->_driverMock->expects( $this->once() )->method( 'crop' )
             ->with( 50, 10, 100, 50 );
@@ -127,22 +129,87 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
         $this->assertType( 'Zend_Image', $transform->left( 50 )->top( 10 )->crop( 100, 50 ) );
     }
 
+    public function testCanCropInNegativeDirectionTop()
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 200, 300 ) ) );
+        $this->_driverMock->expects( $this->once() )->method( 'crop' )
+            ->with( $this->equalTo( 20 ), $this->equalTo( 30 ), 50, 60 );
+
+        $image = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+        $image->left( 20 )->top( 30 + 60 )->crop( 50, -60 );
+    }
+
+    public function testCanCropInNegativeDirectionLeft()
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 200, 300 ) ) );
+        $this->_driverMock->expects( $this->once() )->method( 'crop' )
+            ->with( $this->equalTo( 20 ), $this->equalTo( 30 ), 50, 60 );
+
+        $image = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+        $image->left( 20 + 50 )->top( 30 )->crop( -50, 60 );
+    }
+
+    public function testRaiseExceptionOnOutOfLeftBound()
+    {
+        $this->_driverMock->expects( $this->never() )->method( 'crop' );
+        try {
+            $image = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $image->left( 10 )->top( 10 )->crop( -20, 10 );
+        } catch( Zend_Image_Transform_Exception $e ) {
+            return;
+        }
+
+        $this->fail( 'An expected exception wasn\'n raised' );
+    }
+
+    public function testRaiseExceptionOnOutOfTopBounds()
+    {
+        $this->_driverMock->expects( $this->never() )->method( 'crop' );
+        try {
+            $image = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $image->left( 10 )->top( 10 )->crop( 10, -20 );
+        } catch( Zend_Image_Transform_Exception $e ) {
+            return;
+        }
+
+        $this->fail( 'An expected exception wasn\'n raised' );
+    }
+
+
+    public function testRaiseExceptionOnOutOfRightBound()
+    {
+        $this->_driverMock->expects( $this->never() )->method( 'crop' );
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 100, 200 ) ) );
+
+        try {
+            $image = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $image->left( 80 )->top( 10 )->crop( 40, 20 );
+        } catch( Zend_Image_Transform_Exception $e ) {
+            return;
+        }
+
+        $this->fail( 'An expected exception wasn\'n raised' );
+    }
+
 
     public function testCanCropRightBottom()
     {
-        $this->_driverMock->expects( $this->exactly( 2 ) )->method( 'getSize' )
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
             ->will( $this->returnValue( array( 1000, 500 ) ) );
         $this->_driverMock->expects( $this->once() )->method( 'crop' )
-            ->with( 1000 - 50, 500 - 10, 100, 50 );
+            ->with( 1000 - 50, 500 - 30, 30, 20 );
 
         $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
-        $this->assertType( 'Zend_Image', $transform->right( 50 )->bottom( 10 )->crop( 100, 50 ) );
+        $this->assertType( 'Zend_Image', $transform->right( 50 )->bottom( 30 )->crop( 30, 20 ) );
     }
 
 
     public function testCanCropCenterMiddle()
     {
-        $this->_driverMock->expects( $this->exactly( 2 ) )->method( 'getSize' )
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
             ->will( $this->returnValue( array( 1000, 500 ) ) );
         $this->_driverMock->expects( $this->once() )->method( 'crop' )
             ->with(
