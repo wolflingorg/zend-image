@@ -46,7 +46,8 @@ Method returns binary content of image.
 
 Example:
 {{{
-$binary = $image->getImage();
+header('Content-Type: image/jpeg');
+echo $image->getImage();
 }}}
 
 == Metrics ==
