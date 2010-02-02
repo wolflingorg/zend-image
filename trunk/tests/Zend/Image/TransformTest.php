@@ -70,6 +70,50 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
     }
 
 
+
+    public function testRaiseExceptionOnFitToWidthNullImage( )
+    {
+        $this->_driverMock->expects( $this->once() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 0, 0 ) ) );
+
+        try {
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->fitToWidth( 100 );
+        }  catch( Zend_Image_Transform_Exception $e ) {
+            return ;
+        }
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testRaiseExceptionOnFitToHeightNullImage( )
+    {
+        $this->_driverMock->expects( $this->once() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 0, 0 ) ) );
+
+        try {
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->fitToHeight( 100 );
+        }
+        catch( Zend_Image_Transform_Exception $e ) {
+            return ;
+        }
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+    
+
+
+
+    public function testCanReturnZendImageOnFitToWidth( )
+    {
+        $this->_driverMock->expects( $this->once() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+
+        $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+        $this->assertType( 'Zend_Image', $transform->fitToWidth( 100 ) );
+    }
+
+
     public function testCanFitToWidth()
     {
         $this->_driverMock->expects( $this->once() )->method( 'getSize' ) 
@@ -78,21 +122,40 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
             ->with( 100, 50 );
 
         $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
-        $this->assertType( 'Zend_Image', $transform->fitToWidth( 100 ) );
+        $transform->fitToWidth( 100 );
     }
 
 
-    public function testCanFitToHeight()
+    public function testCanReturnZendImageOnFitToHeight( )
     {
-        $this->_driverMock->expects( $this->once() )->method( 'getSize' )
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
             ->will( $this->returnValue( array( 1000, 500 ) ) );
-        $this->_driverMock->expects( $this->once() )->method( 'resize' )
-            ->with( 100, 50 );
 
         $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
         $this->assertType( 'Zend_Image', $transform->fitToHeight( 50 ) );
     }
 
+
+    public function testCanFitToHeight()
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+        $this->_driverMock->expects( $this->once() )->method( 'resize' )
+            ->with( 100, 50 );
+
+        $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+        $transform->fitToHeight( 50 );
+    }
+
+
+    public function testCanReturnZendImageOnFitIntoFrame()
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+
+        $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+        $this->assertType( 'Zend_Image', $transform->fitIn( 50, 50 ) );
+    }
 
     public function testCanFitIntoFrame()
     {
@@ -106,6 +169,16 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
     }
 
 
+    public function testCanReturnZendImageOnFitOutFrame()
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+
+        $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+        $this->assertType( 'Zend_Image', $transform->fitOut( 50, 50 ) );
+    }
+
+
     public function testCanFitOutOfFrame()
     {
         $this->_driverMock->expects( $this->any( 2 ) )->method( 'getSize' )
@@ -114,7 +187,34 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
             ->with( 100, 50 );
 
         $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
-        $this->assertType( 'Zend_Image', $transform->fitOut( 50, 50 ) );
+        $transform->fitOut( 50, 50 );
+    }
+
+
+    public function testCanReturnZendImageOnDiretions()
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+
+        $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+        
+        $this->assertType( 'Zend_Image', $transform->left( 50 ) );
+        $this->assertType( 'Zend_Image', $transform->right( 50 ) );
+        $this->assertType( 'Zend_Image', $transform->center() );
+
+        $this->assertType( 'Zend_Image', $transform->top( 50 ) );
+        $this->assertType( 'Zend_Image', $transform->bottom( 50 ) );
+        $this->assertType( 'Zend_Image', $transform->middle(  ) );
+    }
+
+
+    public function testCanReturnZendImageOnCrop()
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+
+        $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+        $this->assertType( 'Zend_Image', $transform->crop( 50, 50 ) );
     }
 
 
@@ -126,8 +226,9 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
             ->with( 50, 10, 100, 50 );
 
         $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
-        $this->assertType( 'Zend_Image', $transform->left( 50 )->top( 10 )->crop( 100, 50 ) );
+        $transform->left( 50 )->top( 10 )->crop( 100, 50 );
     }
+
 
     public function testCanCropInNegativeDirectionTop()
     {
@@ -140,6 +241,7 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
         $image->left( 20 )->top( 30 + 60 )->crop( 50, -60 );
     }
 
+
     public function testCanCropInNegativeDirectionLeft()
     {
         $this->_driverMock->expects( $this->any() )->method( 'getSize' )
@@ -151,6 +253,7 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
         $image->left( 20 + 50 )->top( 30 )->crop( -50, 60 );
     }
 
+
     public function testRaiseExceptionOnOutOfLeftBound()
     {
         $this->_driverMock->expects( $this->never() )->method( 'crop' );
@@ -161,8 +264,9 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->fail( 'An expected exception wasn\'n raised' );
+        $this->fail( 'Expected exception wasn\'n raised' );
     }
+
 
     public function testRaiseExceptionOnOutOfTopBounds()
     {
@@ -174,7 +278,7 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->fail( 'An expected exception wasn\'n raised' );
+        $this->fail( 'Expected exception wasn\'n raised' );
     }
 
 
@@ -191,7 +295,24 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
             return;
         }
 
-        $this->fail( 'An expected exception wasn\'n raised' );
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testRaiseExceptionOnOutOfBottomBound()
+    {
+        $this->_driverMock->expects( $this->never() )->method( 'crop' );
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 100, 200 ) ) );
+
+        try {
+            $image = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $image->left( 80 )->top( 150 )->crop( 10, 60 );
+        } catch( Zend_Image_Transform_Exception $e ) {
+            return;
+        }
+
+        $this->fail( 'Expected exception wasn\'n raised' );
     }
 
 
@@ -203,7 +324,7 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
             ->with( 1000 - 50, 500 - 30, 30, 20 );
 
         $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
-        $this->assertType( 'Zend_Image', $transform->right( 50 )->bottom( 30 )->crop( 30, 20 ) );
+        $transform->right( 50 )->bottom( 30 )->crop( 30, 20 );
     }
 
 
@@ -219,9 +340,180 @@ class Zend_Image_TransformTest extends PHPUnit_Framework_TestCase
             );
 
         $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
-        $this->assertType( 'Zend_Image', $transform->center()->middle()->crop( 100, 50 ) );
+        $transform->center()->middle()->crop( 100, 50 );
     }
 
+
+    public function testRaiseExceptionOnLeftRight( )
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+
+        try {
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->left(10)->right(10)->crop( 100, 50 );
+        }
+        catch( Zend_Image_Transform_Exception $e ) {
+            return ;
+        }
+
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testRaiseExceptionOnLeftCenter( )
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+
+        try {
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->center()->left(10)->crop( 100, 50 );
+        }
+        catch( Zend_Image_Transform_Exception $e ) {
+            return ;
+        }
+
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testRaiseExceptionOnRightCenter( )
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+
+        try {
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->center()->right(10)->crop( 100, 50 );
+        }
+        catch( Zend_Image_Transform_Exception $e ) {
+            return ;
+        }
+
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testRaiseExceptionOnTopBottom( )
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+
+        try {
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->top(10)->bottom(10)->crop( 100, 50 );
+        }
+        catch( Zend_Image_Transform_Exception $e ) {
+            return ;
+        }
+
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testRaiseExceptionOnTopMiddle( )
+    {
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+
+        try {
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->middle()->top(10)->crop( 100, 50 );
+        }
+        catch( Zend_Image_Transform_Exception $e ) {
+            return ;
+        }
+
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testRaiseExceptionOnBottomMiddle( )
+    {  
+        $this->_driverMock->expects( $this->any() )->method( 'getSize' )
+            ->will( $this->returnValue( array( 1000, 500 ) ) );
+
+        try {
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->middle()->bottom(10)->crop( 100, 50 );
+        }
+        catch( Zend_Image_Transform_Exception $e ) {
+            return ;
+        }
+
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testCanResize()
+    {
+        $this->_driverMock->expects( $this->once() )->method( 'resize' )
+            ->with( 100, 50 );
+
+        $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+        $transform->resize( 100, 50 );
+    }
+
+    
+    public function testRaiseExceptionOnZeroWidth()
+    {
+        try {
+            $this->_driverMock->expects( $this->never() )->method( 'resize' );
+
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->resize( 0, 50 );
+
+        } catch ( Zend_Image_Transform_Exception $e) {
+            return ;
+        }
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testRaiseExceptionOnNegativeWidth()
+    {
+        try {
+            $this->_driverMock->expects( $this->never() )->method( 'resize' );
+
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->resize( -1, 50 );
+
+        } catch ( Zend_Image_Transform_Exception $e) {
+            return ;
+        }
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testRaiseExceptionOnNullHeight()
+    {
+        try {
+            $this->_driverMock->expects( $this->never() )->method( 'resize' );
+
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->resize( 1, 0 );
+
+        } catch ( Zend_Image_Transform_Exception $e) {
+            return ;
+        }
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testRaiseExceptionOnNegativeHeight()
+    {
+        try {
+            $this->_driverMock->expects( $this->never() )->method( 'resize' );
+
+            $transform = new Zend_Image_Transform( '1.jpg', $this->_driverMock );
+            $transform->resize( 1, -1 );
+
+        } catch ( Zend_Image_Transform_Exception $e) {
+            return ;
+        }
+        $this->fail( 'Expected exception wasn\'n raised' );
+    }
 }
 
 

@@ -40,6 +40,25 @@ require_once 'Zend/Image/Transform/Exception.php';
  */
 class Zend_Image_Transform extends Zend_Image
 {
+  /**
+   * @return
+   */
+  public function resize( $width, $height )
+  {
+      if ( $width <= 0 ) {
+          throw new Zend_Image_Transform_Exception( 
+              'Width can\'t be 0 or negative'
+          );
+      }
+      
+      if ( $height <= 0 ) {
+          throw new Zend_Image_Transform_Exception( 
+              'Height can\'t be 0 or negative'
+          );
+      }
+
+      $this->_driver->resize( $width, $height );
+  }
     /**
      * Fits image to target width.
      *
@@ -48,15 +67,28 @@ class Zend_Image_Transform extends Zend_Image
      */
     public function fitToWidth( $targetWidth )
     {
-        list( $widthSource, $heightSource ) = $this->_driver->getSize();
-        $targetHeight = round( $heightSource / $widthSource * $targetWidth );
+        list( $sourceWidth, $sourceHeight ) = $this->_driver->getSize();
+
+        if( !$sourceWidth ) {
+            throw new Zend_Image_Transform_Exception( 'Source width can\'t be 0' );
+        }
+        
+        if( !$sourceHeight ) {
+            throw new Zend_Image_Transform_Exception( 'Source height can\'t be 0' );
+        }
+
+        $targetHeight = round( $sourceHeight / $sourceWidth * $targetWidth );
 
         if ( $targetHeight <= 0 ) {
-            throw new Zend_Image_Transform_Exception( 'Target height can\'t be 0 or less' );
+            throw new Zend_Image_Transform_Exception( 
+              'Target height can\'t be 0 or less'
+            );
         }
 
         if ( $targetWidth <= 0 ) {
-            throw new Zend_Image_Transform_Exception( 'Target width can\'t be 0 or less' );
+            throw new Zend_Image_Transform_Exception( 
+              'Target width can\'t be 0 or less'
+            );
         }
 
         $this->_driver->resize( $targetWidth, $targetHeight );
@@ -73,6 +105,15 @@ class Zend_Image_Transform extends Zend_Image
     public function fitToHeight( $targetHeight )
     {
         list( $sourceWidth, $sourceHeight ) = $this->_driver->getSize();
+
+        if( !$sourceWidth ) {
+            throw new Zend_Image_Transform_Exception( 'Source width can\'t be 0' );
+        }
+
+        if( !$sourceHeight ) {
+            throw new Zend_Image_Transform_Exception( 'Source height can\'t be 0' );
+        }
+        
         $targetWidth = round( $sourceWidth / $sourceHeight * $targetHeight );
 
         if ( $targetWidth <= 0 ) {
@@ -221,6 +262,8 @@ class Zend_Image_Transform extends Zend_Image
      */
     public function crop( $width, $height )
     {
+        $this->_checkOffsets();
+
         $leftOffset = $this->_calcLeftOffset();
         $topOffset = $this->_calcTopOffset();
 
@@ -242,15 +285,86 @@ class Zend_Image_Transform extends Zend_Image
             $width = -$width;
         }
 
+        $this->_checkOutOfBounds( $leftOffset, $topOffset, $width, $height );
+
+        $this->_driver->crop( $leftOffset, $topOffset, $width, $height );
+
+        return $this;
+    }
+    /**
+     * Check opposite offsets can not be setted.
+     */
+    private function _checkOffsets()
+    {
+        if( $this->_leftOffset > 0 && $this->_rightOffset > 0 ) {
+            throw new Zend_Image_Transform_Exception(
+                'Both of right and left was setted. Right and left offset ' .
+                    'can\'t be setted at same time.'
+            );
+        }
+
+        if( $this->_center && $this->_leftOffset > 0 ) {
+            throw new Zend_Image_Transform_Exception(
+                'Both of center and left was setted. Center and left can\'t ' .
+                    'be setted at same time'
+            );
+        }
+
+        if( $this->_center && $this->_rightOffset > 0 ) {
+            throw new Zend_Image_Transform_Exception(
+                'Both of center and right was setted. Center and right can\'t ' .
+                    'be setted at same time'
+            );
+        }
+
+        if( $this->_topOffset && $this->_bottomOffset ) {
+            throw new Zend_Image_Transform_Exception(
+                'Both of top and bottom was setted. Right and left offset ' .
+                    'can\'t be setted at same time.'
+            );
+        }
+
+        if( $this->_middle && $this->_topOffset > 0 ) {
+            throw new Zend_Image_Transform_Exception(
+                'Both of middle and top was setted. Center and left can\'t ' .
+                    'be setted at same time'
+            );
+        }
+
+        if( $this->_middle && $this->_bottomOffset > 0 ) {
+            throw new Zend_Image_Transform_Exception(
+                'Both of middle and bottom was setted. Center and right can\'t ' .
+                    'be setted at same time'
+            );
+        }
+
+    }
+    /**
+     * Check offsets are valid.
+     *
+     * @param int $leftOffset
+     * @param int $rightOffset
+     * @param int $width
+     * @param int $height
+     */
+    private function _checkOutOfBounds (
+      $leftOffset,
+      $topOffset,
+      $width,
+      $height
+    )
+    {
         if ( $leftOffset < 0 ) {
             throw new Zend_Image_Transform_Exception(
-                "Trying to crop from ($leftOffset, $topOffset). Offset can't been negative."
+                "Trying to crop from ($leftOffset, $topOffset). Offset can't " .
+                    "been negative."
             );
         }
 
         if ( $topOffset < 0 ) {
             throw new Zend_Image_Transform_Exception(
-                "Trying to crop from ($leftOffset, $topOffset). Offset can't been negative."
+                "Trying to crop from ($leftOffset, $topOffset). Offset can't " .
+                    "been negative."
             );
         }
 
@@ -267,16 +381,11 @@ class Zend_Image_Transform extends Zend_Image
                     ( $topOffset + $height ) . '). Out of right bound.'
             );
         }
-
-
-        $this->_driver->crop( $leftOffset, $topOffset, $width, $height );
-
-        return $this;
     }
-
 
     private function _calcLeftOffset()
     {
+
         if ( $this->_leftOffset > 0 ) {
             $leftOffset = $this->_leftOffset;
         } else if ( $this->_rightOffset > 0 ) {
@@ -301,9 +410,6 @@ class Zend_Image_Transform extends Zend_Image
 
         return $topOffset;
     }
-
-
-
 
     private $_topOffset = 0;
     private $_bottomOffset = 0;
