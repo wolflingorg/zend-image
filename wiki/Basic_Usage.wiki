@@ -25,7 +25,7 @@ $image = new Zend_Image( null, new Zend_Image_Driver_Imagick );
 If you want load image from filename, you have to specify `$source` as existing filename.
 Example:
 {{{
-$stars = new Zend_Image( 'start.jpg', new Zend_Image_Driver_Imagick );
+$stars = new Zend_Image( 'stars.jpg', new Zend_Image_Driver_Imagick );
 }}}
 
 == Saving image ==
