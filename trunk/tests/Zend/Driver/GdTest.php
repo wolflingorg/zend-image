@@ -21,7 +21,7 @@
  * For single test run.
  */
 if( ! defined( 'PHPUnit_MAIN_METHOD' ) ) {
-    define( 'PHPUnit_MAIN_METHOD', 'Zend_ImageTest::main' );
+    define( 'PHPUnit_MAIN_METHOD', 'Zend_Image_Driver_GdTest::main' );
 }
 
 /**
@@ -44,11 +44,6 @@ require_once 'Zend/Image/Driver/Gd.php';
  */
 class Zend_Image_Driver_GdTest extends PHPUnit_Framework_Testcase
 {
-    /**
-     *
-     * @var str
-     */
-    private $_fileNameJpeg = '_files/1.jpg';
 
     public static function main()
     {
@@ -57,29 +52,75 @@ class Zend_Image_Driver_GdTest extends PHPUnit_Framework_Testcase
     }
 
 
-    /**
-     * @return
-     */
-    public function testCanLoadJpeg()
+    public function testCanGetSize()
     {
         $driver = new Zend_Image_Driver_Gd();
+        $driver->load( $this->_fileName );
 
-        $driver->load( $this->_fileNameJpeg );
-        
-        $imageSize = getimagesize( $this->_fileNameJpeg );
-
+        $imageSize = getimagesize( $this->_fileName );
         $this->assertEquals(
-            array( $imageSize[0], $imageSize[1] ), 
+            array( $imageSize[0], $imageSize[1] ),
             $driver->getSize()
         );
     }
- 
+
+
+    public function testCanGetBinary()
+    {
+        $driver = new Zend_Image_Driver_Gd();
+        $driver->load( $this->_fileName );
+
+        $this->assertEquals(
+            md5_file( $this->_fileName ),
+            md5( $driver->getBinary() )
+        );
+    }
+
+
     public function testCanResize()
     {
-//        $this->markTestIncomlete(); 
+        $driver = new Zend_Image_Driver_Gd();
+        $driver->load( $this->_fileName );
+
+        $driver->resize( 100, 200 );
+        $this->assertEquals(
+            md5_file( $this->_fileNameResized ),
+            md5( $driver->getBinary() )
+        );
     }
+
+
+    public function testCanCrop()
+    {
+        $driver = new Zend_Image_Driver_Gd();
+        $driver->load( $this->_fileName );
+
+        $driver->crop( 10, 20, 30, 40 );
+        $this->assertEquals(
+            md5_file( $this->_fileNameCropped ),
+            md5( $driver->getBinary() )
+        );
+    }
+
+
+    /**
+     * @var string
+     */
+    private $_fileName = '_files/205x154.jpg';
+
+
+    /**
+     * @var string
+     */
+    private $_fileNameResized = '_files/100x200.jpg';
+
+
+    /**
+     * @var string
+     */
+    private $_fileNameCropped = '_files/30x40.jpg';
 }
 
-if( PHPUnit_MAIN_METHOD == 'Zend_ImageTest::main' ) {
-    Zend_ImageTest::main();
+if( PHPUnit_MAIN_METHOD == 'Zend_Image_Driver_GdTest::main' ) {
+    Zend_Image_Driver_GdTest::main();
 }
