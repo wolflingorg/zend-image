@@ -1,0 +1,1 @@
+#summary How to transform image with Zend_Image?
