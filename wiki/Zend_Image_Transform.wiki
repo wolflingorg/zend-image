@@ -18,7 +18,7 @@ You can resize image as you wish with following method:
 
 `Zend_Image_Transform::resize( $newWidth, $newHeight );`
 
-Example ($image was created earlier):
+Example (`$transform` was created earlier):
 {{{
 $transform->resize( 100, 200 );
 }}}
