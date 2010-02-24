@@ -1,1 +1,32 @@
 #summary How to transform image with Zend_Image?
+
+= Introduction =
+First, you need to load image:
+{{{
+$transform = new Zend_Image_Transform( 'worms.jpg', new Zend_Image_Driver_Gd );
+}}}
+
+Or, you can use this syntax (usable sometimes):
+{{{
+$image = new Zend_Image( 'worms.jpg', new Zend_Image_Driver_Gd );
+$transform = new Zend_Image_Transform( $image );
+}}}
+
+= Resizing =
+You can resize image as you wish with following method:
+`Zend_Image_Transform::resize( $newWidth, $newHeight );`
+
+Example ($image was created earlier):
+{{{
+$transform->resize( 100, 200 );
+}}}
+
+= Cropping =
+`Zend_Image_Transform::crop( $newWidth, $newHeight );`
+
+By default, this api crop from top left corner of source image. How to fix it, we show later.
+
+This example shows, how to crop a 50x50 area from source image (source _must be_ greater, than 50x50): 
+{{{
+$transform->crop( 50, 50 );
+}}}
