@@ -1,6 +1,22 @@
 <?php
 
-class Zend_Image_Driver_Gd 
+/**
+ * @see Zend_Image_Driver_Interface
+ */
+require_once 'Zend/Image/Driver/Interface.php';
+
+/**
+ * @see Zend_Image_Driver_Exception
+ */
+require_once 'Zend/Image/Driver/Exception.php';
+
+
+/**
+ * @see Zend_Image_Driver_Abstract
+ */
+require_once 'Zend/Image/Driver/Abstract.php';
+
+class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
 {
     /**
      * Load image from $fileName
@@ -9,10 +25,16 @@ class Zend_Image_Driver_Gd
      */
     public function load( $fileName )
     {
+        $this->_imageLoaded = false;
+        if ( ! file_exists( $fileName ) ) {
+            throw new Zend_Image_Driver_Exception( 'File "' . $fileName . '" not exists.' );
+        }
+
         $info = getimagesize( $fileName );
         switch( $info[ 2 ] ) {
             case IMAGETYPE_JPEG:
                 $this->_image = imageCreateFromJpeg( $fileName );
+                $this->_imageLoaded = $this->_image !== false;
                 break;
         }
     }
@@ -40,8 +62,21 @@ class Zend_Image_Driver_Gd
     }
 
 
+    public function save( $file )
+    {
+         if ( !$this->_image ) {
+             throw new Zend_Image_Driver_Exception(
+                 'Trying to save image while it not loaded'
+             );
+         }
+
+        imagejpeg( $this->_image, $file );
+    }
+
     public function resize( $width, $height )
     {
+        parent::resize( $width, $height );
+
         $imageSize = $this->getSize();
         $resizedImage = imagecreatetruecolor( $width, $height );
         $successfull = imagecopyresized(
@@ -61,6 +96,8 @@ class Zend_Image_Driver_Gd
 
     public function crop( $left, $top, $width, $height )
     {
+        parent::crop( $left, $top, $width, $height );
+
         $imageSize = $this->getSize();
         $croppedImage = imagecreatetruecolor( $width, $height );
         $successfull = imagecopyresized(

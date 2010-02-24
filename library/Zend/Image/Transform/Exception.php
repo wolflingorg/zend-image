@@ -18,12 +18,17 @@
  */
 
 /**
+ * @see Zend_Image_Exception
+ */
+require_once 'Zend/Image/Exception.php';
+
+/**
  * @category   Zend
  * @package    Zend_Image
  * @copyright  Copyright (c) 2010
  * @license    http://www.opensource.org/licenses/bsd-license.php New BSD License
  */
-class Zend_Image_Transform_Exception extends Exception
+class Zend_Image_Transform_Exception extends Zend_Image_Exception
 {
     
 }

@@ -63,31 +63,31 @@ class Zend_ImageTest extends PHPUnit_Framework_Testcase
 
     public function testCanLoadByFileName()
     {
-        $this->_driverMock->expects( $this->once() )->method( 'loadByFile' )
-            ->with( '1.jpg' );
+        $this->_driverMock->expects( $this->once() )->method( 'load' )
+            ->with( 'doesnt-matter.jpg' );
 
-        $i = new Zend_Image( '1.jpg', $this->_driverMock );
+        $i = new Zend_Image( 'doesnt-matter.jpg', $this->_driverMock );
     }
 
 
     public function testCanLoadByZendImage()
     {
-        $this->_driverMock->expects( $this->once() )->method( 'loadByFile' )
+        $this->_driverMock->expects( $this->once() )->method( 'load' )
              ->will( $this->returnValue( 'ImageContents' ) );
 
-        $i = new Zend_Image( '1.jpg', $this->_driverMock );
+        $i = new Zend_Image( 'doesnt-matter.jpg', $this->_driverMock );
         $i2 = new Zend_Image( $i );
 
         $this->assertEquals( 
-            $i->getDriver()->getImageAsBinary(),
-            $i2->getDriver()->getImageAsBinary()
+            $i->getDriver()->getBinary(),
+            $i2->getDriver()->getBinary()
         );
     }
 
 
     public function testCanGetDriver()
     {
-        $i = new Zend_Image( '1.jpg', $this->_driverMock );
+        $i = new Zend_Image( 'doesnt-matter.jpg', $this->_driverMock );
         $this->assertEquals( $i->getDriver(), $this->_driverMock );
     }
 
@@ -95,20 +95,20 @@ class Zend_ImageTest extends PHPUnit_Framework_Testcase
     public function testCanSaveIntoFile()
     {
         $this->_driverMock->expects( $this->once() )->method( 'save' )
-            ->with( '2.jpg' )->will( $this->returnValue( true ) );
+            ->with( 'doesnt-matter-2.jpg' )->will( $this->returnValue( true ) );
 
-        $i = new Zend_Image( '1.jpg', $this->_driverMock );
-        $this->assertTrue( $i->save( '2.jpg' ) ); 
+        $i = new Zend_Image( 'doesnt-matter.jpg', $this->_driverMock );
+        $this->assertTrue( $i->save( 'doesnt-matter-2.jpg' ) ); 
     }
 
 
     public function testCanGetImageContents()
     {
-        $this->_driverMock->expects( $this->once() )->method( 'getImageAsBinary' )
+        $this->_driverMock->expects( $this->once() )->method( 'getBinary' )
             ->will( $this->returnValue( 'ImageContents' ) );
 
-        $i = new Zend_Image( '1.jpg', $this->_driverMock );
-        $this->assertEquals( 'ImageContents', $i->getImageAsBinary());
+        $i = new Zend_Image( 'doesnt-matter.jpg', $this->_driverMock );
+        $this->assertEquals( 'ImageContents', $i->getBinary());
     }
 
 
@@ -123,7 +123,7 @@ class Zend_ImageTest extends PHPUnit_Framework_Testcase
         $this->_driverMock->expects( $this->exactly( 2 ) )->method( 'getSize' )
             ->will( $this->returnValue( array( 50, 100 ) ) );
 
-        $i = new Zend_Image( '1.jpg', $this->_driverMock );
+        $i = new Zend_Image( 'doesnt-matter.jpg', $this->_driverMock );
         $this->assertEquals( 50, $i->getWidth() );
         $this->assertEquals( 100, $i->getHeight() );
     }
