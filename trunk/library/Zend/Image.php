@@ -21,7 +21,7 @@
 /**
  * @see Zend_Image_Driver_Interface
  */
-require_once 'Zend/Image/Driver/Inteface.php';
+require_once 'Zend/Image/Driver/Interface.php';
 
 /**
  * Base class for loading and saving images.
@@ -45,7 +45,7 @@ class Zend_Image
             $this->_driver = $driver;
         }
 
-        $this->loadByFile( $filename );
+        $this->load( $filename );
     }
 
 
@@ -56,13 +56,13 @@ class Zend_Image
      * @param  mixed $filename Filename or instance of Zend_Image.
      * @return Zend_Image
      */
-    public function loadByFile( $filename )
+    public function load( $filename )
     {
         if( $filename instanceof Zend_Image ) {
             $this->_driver = clone $filename->getDriver();
         } else {
             $this->_filename = $filename;
-            $this->_driver->loadByFile( $this->_filename );
+            $this->_driver->load( $this->_filename );
         }
 
         return $this;
@@ -73,7 +73,7 @@ class Zend_Image
      *
      * @return bool
      */
-    public function save ( $filename )
+    public function save( $filename )
     {
         return $this->_driver->save( $filename );
     }
@@ -109,9 +109,9 @@ class Zend_Image
      *
      * @return binary
      */
-    public function getImageAsBinary()
+    public function getBinary()
     {
-        return $this->_driver->getImageAsBinary();
+        return $this->_driver->getBinary();
     }
 
 

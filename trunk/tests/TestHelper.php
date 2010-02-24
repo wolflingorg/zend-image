@@ -27,7 +27,7 @@ define( 'TESTS_PATH', ROOT_PATH . 'tests' . DIRECTORY_SEPARATOR );
 set_include_path(
 	implode(
 		PATH_SEPARATOR, array(
-			LIBRARY_PATH, TESTS_PATH , get_include_path()
+			LIBRARY_PATH, TESTS_PATH, get_include_path()
 		)
 	)
 );

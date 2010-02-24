@@ -28,11 +28,10 @@ interface Zend_Image_Driver_Interface
     /**
      * @todo Description
      */
-    public function loadByFile( $filename );
-    public function loadByBinary( $binary );
+    public function load( $filename );
     public function save( $filename );
-    public function getImageAsBinary();
+    public function getBinary();
     public function getSize();
-    public function resize();
-    public function crop( $leftOffset, $topOffset );
+    public function resize( $width, $height );
+    public function crop( $left, $top, $width, $height );
 }
