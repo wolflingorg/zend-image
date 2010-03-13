@@ -13,7 +13,6 @@ require_once 'Zend/Image/Exception.php';
  * @subpackage  Zend_Image_Driver
  * @author      Stanislav Seletskiy <s.seletskiy@office.ngs.ru>
  * @author      Leonid A Shagabutdinov <leonid@shagabutdinov.com>
- * @copyright   2010 NGS
  */
 class Zend_Image_Driver_Exception extends Zend_Image_Exception
 {
