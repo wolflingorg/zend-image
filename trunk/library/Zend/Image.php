@@ -78,23 +78,6 @@ class Zend_Image
         return $this->_driver->save( $filename );
     }
 
-
-    /**
-     * Filename of image source.
-     *
-     * @var string
-     */
-    private $_filename = '';
-
-
-    /**
-     * Driver for image operations.
-     *
-     * @var Zend_Image_Driver
-     */
-    protected $_driver = null;
-
-
     /**
      * @return Zend_Image_Driver_Interface
      */
@@ -118,6 +101,7 @@ class Zend_Image
     /**
      * Returns width of image.
      *
+     * @throws Zend_Image_Driver_Exception
      * @return int Width of image.
      */
     public function getWidth()
@@ -130,6 +114,7 @@ class Zend_Image
     /**
      * Returns height of image.
      *
+     * @throws Zend_Image_Driver_Exception
      * @return int Height of image.
      */
     public function getHeight()
@@ -137,4 +122,19 @@ class Zend_Image
         $size = $this->_driver->getSize();
         return $size[ 1 ];
     }
+
+    /**
+     * Filename of image source.
+     *
+     * @var string
+     */
+    private $_filename = '';
+
+
+    /**
+     * Driver for image operations.
+     *
+     * @var Zend_Image_Driver
+     */
+    protected $_driver = null;
 }

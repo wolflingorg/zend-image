@@ -16,11 +16,21 @@ require_once 'Zend/Image/Driver/Exception.php';
  */
 require_once 'Zend/Image/Driver/Abstract.php';
 
+/**
+ * GdImage driver
+ *
+ * @category    Zend
+ * @package     Zend_Image
+ * @subpackage  Zend_Image_Driver
+ * @author      Leonid A Shagabutdinov <leonid@shagabutdinov.com>
+ * @author      Stanislav Seletskiy <s.seletskiy@office.ngs.ru>
+ */
 class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
 {
     /**
      * Load image from $fileName
      *
+     * @throws Zend_Image_Driver_Exception
      * @param string $fileName Path to image
      */
     public function load( $fileName )
@@ -34,14 +44,28 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
         switch( $info[ 2 ] ) {
             case IMAGETYPE_JPEG:
                 $this->_image = imageCreateFromJpeg( $fileName );
-                $this->_imageLoaded = $this->_image !== false;
+                if ( $this->_image !== false ) {
+                    $this->_imageLoaded = true;
+                }
                 break;
         }
     }
 
 
+    /**
+     * Get image size
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @return array Format: array( width, height )
+     */
     public function getSize()
     {
+        if( $this->_image === null ) {
+            throw new Zend_Image_Driver_Exception(
+                'Trying to get size of non-loaded image'
+            );
+        }
+
         return array(
             imagesx( $this->_image ),
             imagesy( $this->_image )
@@ -56,23 +80,43 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
      */
     public function getBinary()
     {
+        if( $this->_image === null ) {
+            throw new Zend_Image_Driver_Exception(
+                'Trying to get size of non-loaded image'
+            );
+        }
+        
         ob_start();
         imagejpeg( $this->_image );
         return ob_get_clean();
     }
 
 
+    /**
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @param string $file File name to save image
+     */
     public function save( $file )
     {
          if ( !$this->_image ) {
              throw new Zend_Image_Driver_Exception(
-                 'Trying to save image while it not loaded'
+                 'Trying to save non-loaded image'
              );
          }
 
         imagejpeg( $this->_image, $file );
     }
 
+
+    /**
+     * Resize image into specified width and height
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @param int $width Width to resize
+     * @param int $height Height to resize
+     * @return bool
+     */
     public function resize( $width, $height )
     {
         parent::resize( $width, $height );
@@ -93,7 +137,17 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
         return $successfull;
     }
 
-
+    
+    /**
+     * Crop image into specified frame
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @param int $left Left point to crop from
+     * @param int $top Top point to crop from
+     * @param int $width Width to crop
+     * @param int $height Height to crop
+     * @return bool
+     */
     public function crop( $left, $top, $width, $height )
     {
         parent::crop( $left, $top, $width, $height );
@@ -117,9 +171,9 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
 
 
     /**
-     * Binary image contents
+     * Link to gd-image resource
      *
      * @type resource
      */
-    private $_image;
+    private $_image = null;
 }

@@ -84,6 +84,19 @@ class Zend_Image_Driver_GdTest extends PHPUnit_Framework_Testcase
     }
 
 
+    public function testCanRaiseExceptionOnGetSizeOfNullImage(  )
+    {
+        $driver = new Zend_Image_Driver_Gd();
+
+        try {
+            $driver->getSize();
+        }
+        catch( Zend_Image_Driver_Exception $exceptionObject) {
+            return ;
+        }
+        $this->fail();
+    }
+
     public function testCanGetSize()
     {
         $driver = new Zend_Image_Driver_Gd();
@@ -106,6 +119,19 @@ class Zend_Image_Driver_GdTest extends PHPUnit_Framework_Testcase
             md5_file( $this->_fileName ),
             md5( $driver->getBinary() )
         );
+    }
+
+    public function testCanRaiseExceptionOnNullImageGetBinary()
+    {
+        $driver = new Zend_Image_Driver_Gd();
+
+        try {
+            $driver->getBinary();
+        }
+        catch( Zend_Image_Driver_Exception $e ) {
+            return ;
+        }
+        $this->fail();
     }
 
 

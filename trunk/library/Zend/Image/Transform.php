@@ -41,7 +41,12 @@ require_once 'Zend/Image/Transform/Exception.php';
 class Zend_Image_Transform extends Zend_Image
 {
     /**
-     * @return
+     * Resize image to specified coordinats
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @param int $width
+     * @param int $height
+     * @return Zend_Image
      */
     public function resize( $width, $height )
     {
@@ -53,6 +58,8 @@ class Zend_Image_Transform extends Zend_Image
     /**
      * Fits image to target width.
      *
+     * @throws Zend_Image_Driver_Exception
+     * @throws Zend_Image_Transform_Exception
      * @param   int $targetWidth Width to fit to.
      * @return  Zend_Image
      */
@@ -78,6 +85,8 @@ class Zend_Image_Transform extends Zend_Image
     /**
      * Fits image to target height.
      *
+     * @throws Zend_Image_Driver_Exception
+     * @throws Zend_Image_Transform_Exception
      * @param   int $targetHeight Height to fit to.
      * @return  Zend_Image
      */
@@ -103,7 +112,8 @@ class Zend_Image_Transform extends Zend_Image
     /**
      * Fits image into specified frame.
      *
-     * @todo Description.
+     * @throws Zend_Image_Driver_Exception
+     * @throws Zend_Image_Transform_Exception
      * @param   int $targetWidth Frame width.
      * @param   int $targetHeight Frame height.
      * @return  Zend_Image
@@ -127,7 +137,8 @@ class Zend_Image_Transform extends Zend_Image
     /**
      * Fits image out of frame.
      *
-     * @todo Description.
+     * @throws Zend_Image_Driver_Exception
+     * @throws Zend_Image_Transform_Exception
      * @param   $targetWidth int Frame width.
      * @param   $targetHeight int Frame height.
      * @return  Zend_Image
@@ -227,6 +238,8 @@ class Zend_Image_Transform extends Zend_Image
     /**
      * Crops image from specified by left(), top(), bottom() or right() point.
      *
+     * @throws Zend_Image_Driver_Exception
+     * @throws Zend_Image_Transform_Exception
      * @param   $width int Width of cropped image.
      * @param   $height int Height of cropped image.
      * @return  Zend_Image
@@ -313,6 +326,11 @@ class Zend_Image_Transform extends Zend_Image
 
     }
 
+    /**
+     * Calculate left offset to crop from
+     *
+     * @return int
+     */
     private function _calcLeftOffset()
     {
         if ( $this->_leftOffset > 0 ) {
@@ -327,6 +345,11 @@ class Zend_Image_Transform extends Zend_Image
     }
 
 
+    /**
+     * Calculate top offset to crop from
+     *
+     * @return int
+     */
     private function _calcTopOffset()
     {
         if ( $this->_topOffset > 0 ) {
@@ -340,11 +363,45 @@ class Zend_Image_Transform extends Zend_Image
         return $topOffset;
     }
 
+    /**
+     * Top coordinate to crop from
+     *
+     * @var int
+     */
     private $_topOffset = 0;
+
+    /**
+     * Bottom coordinate to crop from
+     *
+     * @var int
+     */
     private $_bottomOffset = 0;
+
+    /**
+     * Left coordinate to crop from
+     *
+     * @var int
+     */
     private $_leftOffset = 0;
+
+    /**
+     * Right coordinate to crop from
+     *
+     * @var int
+     */
     private $_rightOffset = 0;
 
+    /**
+     * Is center (by x axis) used to crop
+     *
+     * @var int
+     */
     private $_center = false;
+
+    /**
+     * Is center (by y axis) used to crop
+     *
+     * @var int
+     */
     private $_middle = false;
 }

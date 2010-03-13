@@ -19,10 +19,15 @@ require_once 'Zend/Image/Driver/Interface.php';
  * @subpackage  Zend_Image_Driver
  * @author      Stanislav Seletskiy <s.seletskiy@office.ngs.ru>
  * @author      Leonid A Shagabutdinov <leonid@shagabutdinov.com>
- * @copyright   2010 NGS
  */
 abstract class Zend_Image_Driver_Abstract implements Zend_Image_Driver_Interface
 {
+    /**
+     * File to load image from
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @param string $fileName
+     */
     public function load( $fileName )
     {
         throw new Zend_Image_Driver_Exception(
@@ -30,22 +35,38 @@ abstract class Zend_Image_Driver_Abstract implements Zend_Image_Driver_Interface
         );
     }
 
+    /**
+     * Resize image to specified coordinats
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @param int $width
+     * @param int $height
+     */
     public function resize( $width, $height )
     {
         if ( $width <= 0 ) {
-            throw new Zend_Image_Driver_Exception( 
+            throw new Zend_Image_Driver_Exception(
                 'Width can not be null or negative'
             );
         }
 
         if ( $height <= 0 ) {
-            throw new Zend_Image_Driver_Exception( 
+            throw new Zend_Image_Driver_Exception(
                 'Height can not be null or negative'
             );
         }
     }
 
 
+    /**
+     * Crop image to specified coordinats
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @param int $width
+     * @param int $height
+     * @param int $targetWidth
+     * @param int $targetHeight
+     */
     public function crop( $left, $top, $targetWidth, $targetHeight )
     {
         if ( $left < 0 ) {
@@ -92,6 +113,11 @@ abstract class Zend_Image_Driver_Abstract implements Zend_Image_Driver_Interface
     }
 
 
+    /**
+     * Check if image was loaded
+     *
+     * @return bool
+     */
     public function isImageLoaded()
     {
         return $this->_imageLoaded;
