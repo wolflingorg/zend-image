@@ -36,18 +36,18 @@ class Zend_Image_Driver_AbstractTest extends PHPUnit_Framework_Testcase
 
     public function setUp() {}
     public function tearDown() {}
-
-    public function testRaiseExceptionOnLoad()
-    {
-            $driver = new Zend_Image_Driver_AbstractStub();
-
-        try {
-            $driver->load( 'does not matter' );
-        } catch( Zend_Image_Driver_Exception $e ) {
-            return ;
-        }
-        $this->fail( 'Expected exception wasn\'n raised' );
-    }
+//
+//    public function testRaiseExceptionOnLoad()
+//    {
+//            $driver = new Zend_Image_Driver_AbstractStub();
+//
+//        try {
+//            $driver->load( 'does not matter' );
+//        } catch( Zend_Image_Driver_Exception $e ) {
+//            return ;
+//        }
+//        $this->fail( 'Expected exception wasn\'n raised' );
+//    }
     public function testRaiseExceptionOnResizeToNullWidth()
     {
         $driver = new Zend_Image_Driver_AbstractStub();
@@ -192,6 +192,39 @@ class Zend_Image_Driver_AbstractTest extends PHPUnit_Framework_Testcase
         }
 
         $this->fail( 'Expected exception wasn\'n raised' );
+    }
+
+
+    public function testGetTypeJpeg(  ) {
+        $driver = new Zend_Image_Driver_AbstractStub();
+        $driver->load( dirname( __FILE__ ) . '/_files/get-type-test.jpg' );
+
+        $this->assertEquals(
+            $driver->getType(),
+            'jpg'
+        );
+    }
+
+    public function testGetTypePng(  ) {
+        $driver = new Zend_Image_Driver_AbstractStub();
+        $driver->load( dirname( __FILE__ ) . '/_files/get-type-test.png' );
+
+        $this->assertEquals(
+            $driver->getType(),
+            'png'
+        );
+    }
+
+
+
+    public function testGetTypeGif(  ) {
+        $driver = new Zend_Image_Driver_AbstractStub();
+        $driver->load( dirname( __FILE__ ) . '/_files/get-type-test.gif' );
+
+        $this->assertEquals(
+            $driver->getType(),
+            'gif'
+        );
     }
 }
 
