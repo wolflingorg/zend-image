@@ -37,4 +37,9 @@ class Zend_Image_Driver_AbstractStub extends Zend_Image_Driver_Abstract
     public function save( $fileName )
     {
     }
+
+
+    public function load( $fileName ) {
+        parent::load( $fileName );
+    }
 }

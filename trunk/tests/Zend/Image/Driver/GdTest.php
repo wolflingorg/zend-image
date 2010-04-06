@@ -70,6 +70,15 @@ class Zend_Image_Driver_GdTest extends PHPUnit_Framework_Testcase
     }
 
 
+    public function testCanLoadImagePng()
+    {
+        $driver = new Zend_Image_Driver_Gd();
+
+        $driver->load( dirname( __FILE__ ) . '/_files/get-type-test.png' );
+        $this->assertEquals( true, $driver->isImageLoaded() );
+    }
+
+
     public function testRaiseExceptionOnNonExistentFile()
     {
         $driver = new Zend_Image_Driver_Gd();
@@ -176,20 +185,8 @@ class Zend_Image_Driver_GdTest extends PHPUnit_Framework_Testcase
     {
         $fileNameTarget = tempnam( sys_get_temp_dir(), 'gd2test_' );
 
-        if ( !is_writable( dirname( $fileNameTarget ) ) ) {
-            $this->markTestSkipped( 
-                'Temporary file "' . $fileNameTarget .'" is not writable' 
-            );
-        }
-
-        if ( file_exists( $fileNameTarget ) && !is_writable( $fileNameTarget ) ) {
-            $this->markTestSkipped( 
-                'Temporary file "' . $fileNameTarget .'" is not writable' 
-            );
-        } else {
-            unlink( $fileNameTarget );
-        }
-
+        $this->checkFileWritable( $fileNameTarget );
+        
         $driver = new Zend_Image_Driver_Gd();
         $driver->load( $this->_fileName );
         $driver->save( $fileNameTarget );
@@ -199,8 +196,78 @@ class Zend_Image_Driver_GdTest extends PHPUnit_Framework_Testcase
             md5_file( $fileNameTarget )
         );
 
-        if ( file_exists( $fileNameTarget ) ) {
-            unlink( $fileNameTarget );
+        $this->unlinkFileIfExists( $fileNameTarget );
+    }
+
+
+    public function testCanSaveJpeg(  )
+    {
+        $this->checkCanSaveAndGetSameType( 'jpg' );
+    }
+
+
+    public function testCanSavePng(  )
+    {
+        $this->checkCanSaveAndGetSameType( 'png' );
+    }
+
+    public function testCanSaveGif(  )
+    {
+        $this->checkCanSaveAndGetSameType( 'gif' );
+    }
+
+
+    private function checkCanSaveAndGetSameType ( $type )
+    {
+
+        $fileNameTarget = tempnam( sys_get_temp_dir(), 'gd2test_' );
+
+        $this->checkFileWritable( $fileNameTarget );
+
+        $driver = new Zend_Image_Driver_Gd();
+        $driver->load( $this->_fileName );
+        $driver->save( $fileNameTarget, $type );
+
+        $this->assertEquals(
+            $this->getImageType( $fileNameTarget ),
+            $type
+        );
+
+        $this->unlinkFileIfExists( $fileNameTarget );
+    }
+
+
+    private function unlinkFileIfExists ( $fileName )
+    {
+        if ( file_exists( $fileName ) ) {
+            unlink( $fileName );
+        }
+    }
+
+
+    private function getImageType ( $fileName )
+    {
+        $driver = new Zend_Image_Driver_Gd();
+        $driver->load( $fileName );
+        return $driver->getType();
+    }
+
+
+    private function checkFileWritable ( $fileName )
+    {
+        
+        if ( !is_writable( dirname( $fileName ) ) ) {
+            $this->markTestSkipped(
+                'Temporary file "' . $fileName .'" is not writable'
+            );
+        }
+
+        if ( file_exists( $fileName ) && !is_writable( $fileName ) ) {
+            $this->markTestSkipped(
+                'Temporary file "' . $fileName .'" is not writable'
+            );
+        } else {
+            unlink( $fileName );
         }
 
     }

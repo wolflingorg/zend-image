@@ -6,12 +6,6 @@
 require_once 'Zend/Image/Driver/Exception.php';
 
 /**
- * @see Zend_Image_Driver_Interface
- */
-require_once 'Zend/Image/Driver/Interface.php';
-
-
-/**
  * Abstract class for drivers
  *
  * @category    Zend
@@ -20,8 +14,36 @@ require_once 'Zend/Image/Driver/Interface.php';
  * @author      Stanislav Seletskiy <s.seletskiy@office.ngs.ru>
  * @author      Leonid A Shagabutdinov <leonid@shagabutdinov.com>
  */
-abstract class Zend_Image_Driver_Abstract implements Zend_Image_Driver_Interface
+abstract class Zend_Image_Driver_Abstract
 {
+    /**
+     * Save image to filename
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @param string $filename
+     * @return bool
+     */
+    public abstract function save( $filename );
+
+
+    /**
+     * Get image contents
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @return string
+     */
+    public abstract function getBinary();
+
+
+    /**
+     * Get image size as array(width, height)
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @return array Format: array(width, height)
+     */
+    public abstract function getSize();
+
+
     /**
      * File to load image from
      *
@@ -30,9 +52,53 @@ abstract class Zend_Image_Driver_Abstract implements Zend_Image_Driver_Interface
      */
     public function load( $fileName )
     {
-        throw new Zend_Image_Driver_Exception(
-            'Method "load" must be implemented'
-        );
+        $this->_type = $this->_getFileType( $fileName );
+    }
+
+
+    /**
+     *
+     * @throws Zend_Image_Driver_Exception
+     * @param string $fileName
+     * @return string jpg | png | gif
+     */
+    protected function _getFileType( $fileName )
+    {
+        if ( !is_readable( $fileName ) ) {
+            throw new Zend_Image_Driver_Exception(
+                'Cannot read file "' . $fileName . '"'
+            );
+        }
+
+        $fileHandle = fopen( $fileName, 'r' );
+        $bytes = fread( $fileHandle, 20 );
+        fclose( $fileHandle );
+
+        $jpegMatch = "\xff\xd8\xff\xe0";
+
+        if ( mb_strstr( $bytes, $jpegMatch ) ) {
+            return 'jpg';
+        }
+
+        $jpegMatch = "\xff\xd8\xff\xe1";
+
+        if ( mb_strstr( $bytes, $jpegMatch ) ) {
+            return 'jpg';
+        }
+
+        $pngMatch = "\x89PNG\x0d\x0a\x1a\x0a";
+
+        if ( mb_strstr( $bytes, $pngMatch ) ) {
+            return 'png';
+        }
+
+         $gifMatch = "GIF8";
+
+         if ( mb_strstr( $bytes, $gifMatch ) ) {
+             return 'gif';
+         }
+
+         return false;
     }
 
     /**
@@ -113,6 +179,14 @@ abstract class Zend_Image_Driver_Abstract implements Zend_Image_Driver_Interface
     }
 
 
+    protected function getTypeFileName( $fileName )
+    {
+        $info = pathinfo( $fileName );
+
+        return $info['extension'];
+    }
+
+
     /**
      * Check if image was loaded
      *
@@ -124,5 +198,23 @@ abstract class Zend_Image_Driver_Abstract implements Zend_Image_Driver_Interface
     }
 
 
+    /**
+     * Get type of current image
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->_type;
+    }
+
+
     protected $_imageLoaded = false;
+
+    /**
+     * Type of current image (jpeg, png or etc.)
+     *
+     * @var string
+     */
+    protected $_type = '';
 }

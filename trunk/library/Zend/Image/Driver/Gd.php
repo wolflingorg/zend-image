@@ -1,11 +1,6 @@
 <?php
 
 /**
- * @see Zend_Image_Driver_Interface
- */
-require_once 'Zend/Image/Driver/Interface.php';
-
-/**
  * @see Zend_Image_Driver_Exception
  */
 require_once 'Zend/Image/Driver/Exception.php';
@@ -35,15 +30,26 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
      */
     public function load( $fileName )
     {
+        parent::load( $fileName );
+        
         $this->_imageLoaded = false;
-        if ( ! file_exists( $fileName ) ) {
-            throw new Zend_Image_Driver_Exception( 'File "' . $fileName . '" not exists.' );
-        }
-
+        
         $info = getimagesize( $fileName );
-        switch( $info[ 2 ] ) {
-            case IMAGETYPE_JPEG:
+        switch( $this->_type ) {
+            case 'jpg':
                 $this->_image = imageCreateFromJpeg( $fileName );
+                if ( $this->_image !== false ) {
+                    $this->_imageLoaded = true;
+                }
+                break;
+            case 'png':
+                $this->_image = imageCreateFromPng( $fileName );
+                if ( $this->_image !== false ) {
+                    $this->_imageLoaded = true;
+                }
+                break;
+            case 'gif':
+                $this->_image = imageCreateFromGif( $fileName );
                 if ( $this->_image !== false ) {
                     $this->_imageLoaded = true;
                 }
@@ -96,8 +102,9 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
      *
      * @throws Zend_Image_Driver_Exception
      * @param string $file File name to save image
+     * @param string $type File type to save
      */
-    public function save( $file )
+    public function save( $file, $type = 'auto' )
     {
          if ( !$this->_image ) {
              throw new Zend_Image_Driver_Exception(
@@ -105,7 +112,27 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
              );
          }
 
-        imagejpeg( $this->_image, $file );
+         if ( $type == 'auto' ) {
+             $type = $this->getType();
+         }
+
+         switch ( $type ) {
+             case 'jpg': case 'jpeg':
+                imagejpeg( $this->_image, $file );
+                break;
+            case 'png':
+                imagepng( $this->_image, $file );
+                break;
+            case 'gif':
+                imagegif( $this->_image, $file );
+                break;
+             default:
+                 throw new Zend_Image_Driver_Exception(
+                    'Undefined image type: "' . $type . '"'
+                 );
+                 break;
+         }
+        
     }
 
 

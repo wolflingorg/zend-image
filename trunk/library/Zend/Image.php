@@ -19,11 +19,6 @@
  */
 
 /**
- * @see Zend_Image_Driver_Interface
- */
-require_once 'Zend/Image/Driver/Interface.php';
-
-/**
  * Base class for loading and saving images.
  *
  * @category  Zend
@@ -37,9 +32,9 @@ class Zend_Image
      * Constructor for image.
      *
      * @param mixed $filename Filename, Zend_Image or binary.
-     * @param Zend_Image_Driver_Interface $driver Driver for image operations.
+     * @param Zend_Image_Driver_Abstract $driver Driver for image operations.
      */
-    public function __construct( $filename, Zend_Image_Driver_Interface $driver = null )
+    public function __construct( $filename, Zend_Image_Driver_Abstract $driver = null )
     {
         if( ! $filename instanceof Zend_Image ) {
             $this->_driver = $driver;
@@ -79,7 +74,7 @@ class Zend_Image
     }
 
     /**
-     * @return Zend_Image_Driver_Interface
+     * @return Zend_Image_Driver_Abstract
      */
     public function getDriver()
     {

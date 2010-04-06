@@ -52,7 +52,7 @@ class Zend_ImageTest extends PHPUnit_Framework_Testcase
 
 
     public function setUp() {
-        $this->_driverMock = $this->getMock( 'Zend_Image_Driver_Interface' );
+        $this->_driverMock = $this->getMock( 'Zend_Image_Driver_Abstract' );
     }
 
 
