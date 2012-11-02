@@ -65,12 +65,13 @@ class Zend_Image
 
     /**
      * Save image to file to disk.
-     *
+     * @param string filename
+		 * @param $type
      * @return bool
      */
-    public function save( $filename )
+    public function save( $filename,$type='auto')
     {
-        return $this->_driver->save( $filename );
+        return $this->_driver->save( $filename ,$type);
     }
 
     /**
