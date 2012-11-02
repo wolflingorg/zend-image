@@ -31,25 +31,25 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
     public function load( $fileName )
     {
         parent::load( $fileName );
-        
+ 
         $this->_imageLoaded = false;
         
         $info = getimagesize( $fileName );
         switch( $this->_type ) {
             case 'jpg':
-                $this->_image = imageCreateFromJpeg( $fileName );
+                $this->_image = imagecreatefromjpeg( $fileName );
                 if ( $this->_image !== false ) {
                     $this->_imageLoaded = true;
                 }
                 break;
             case 'png':
-                $this->_image = imageCreateFromPng( $fileName );
+                $this->_image = imagecreatefrompng( $fileName );
                 if ( $this->_image !== false ) {
                     $this->_imageLoaded = true;
                 }
                 break;
             case 'gif':
-                $this->_image = imageCreateFromGif( $fileName );
+                $this->_image = imagecreatefromgif( $fileName );
                 if ( $this->_image !== false ) {
                     $this->_imageLoaded = true;
                 }
@@ -118,13 +118,14 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
 
          switch ( $type ) {
              case 'jpg': case 'jpeg':
-                imagejpeg( $this->_image, $file );
+                return imagejpeg( $this->_image, $file );
                 break;
             case 'png':
-                imagepng( $this->_image, $file );
+								imagesavealpha($this->_image,true);
+               return imagepng( $this->_image, $file );
                 break;
             case 'gif':
-                imagegif( $this->_image, $file );
+               return imagegif( $this->_image, $file );
                 break;
              default:
                  throw new Zend_Image_Driver_Exception(
@@ -150,6 +151,10 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
 
         $imageSize = $this->getSize();
         $resizedImage = imagecreatetruecolor( $width, $height );
+				if($this->_type == "png")
+				{
+					imagealphablending($resizedImage,true);
+				}
         $successfull = imagecopyresized(
             $resizedImage, $this->_image,
             0, 0,
@@ -181,6 +186,10 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
 
         $imageSize = $this->getSize();
         $croppedImage = imagecreatetruecolor( $width, $height );
+				if($this->_type == "png")
+				{
+					imagealphablending($croppedImage,true);
+				}
         $successfull = imagecopyresized(
             $croppedImage, $this->_image,
             0, 0,
@@ -195,7 +204,6 @@ class Zend_Image_Driver_Gd extends Zend_Image_Driver_Abstract
         return $successfull;
 
     }
-
 
     /**
      * Link to gd-image resource

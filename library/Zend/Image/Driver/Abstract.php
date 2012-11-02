@@ -21,9 +21,10 @@ abstract class Zend_Image_Driver_Abstract
      *
      * @throws Zend_Image_Driver_Exception
      * @param string $filename
+		 * @param string type
      * @return bool
      */
-    public abstract function save( $filename );
+    public abstract function save( $filename ,$type='auto');
 
 
     /**
